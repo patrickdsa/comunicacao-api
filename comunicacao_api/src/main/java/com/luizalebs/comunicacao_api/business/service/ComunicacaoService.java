@@ -35,8 +35,6 @@ public class ComunicacaoService {
         return outDTO;
     }
 
-
-
     public ComunicacaoOutDTO buscarStatusComunicacao(String emailDestinatario) {
         ComunicacaoEntity entity = repository.findByEmailDestinatario(emailDestinatario);
         if (Objects.isNull(entity)) {
