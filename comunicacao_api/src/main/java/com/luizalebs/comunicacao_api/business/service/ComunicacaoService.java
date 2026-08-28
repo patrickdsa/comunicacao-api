@@ -7,6 +7,7 @@ import com.luizalebs.comunicacao_api.business.converter.ComunicacaoMapper;
 import com.luizalebs.comunicacao_api.business.converter.EmailMapper;
 import com.luizalebs.comunicacao_api.infraestructure.entities.ComunicacaoEntity;
 import com.luizalebs.comunicacao_api.infraestructure.enums.StatusEnvioEnum;
+import com.luizalebs.comunicacao_api.infraestructure.exceptions.ResourceNotFoundException;
 import com.luizalebs.comunicacao_api.infraestructure.repositories.ComunicacaoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,11 +27,11 @@ public class ComunicacaoService {
 
     public ComunicacaoOutDTO agendarComunicacao(ComunicacaoInDTO dto) {
         if (Objects.isNull(dto)) {
-            throw new RuntimeException();
+            throw new ResourceNotFoundException("Erro ao agendar comunicação");
         }
         dto.setStatusEnvio(StatusEnvioEnum.PENDENTE);
         ComunicacaoEntity entity = comunicacaoMapper.paraComunicacaoEntity(dto);
-        repository.save(entity);
+        repository.saveAndFlush(entity);
         ComunicacaoOutDTO outDTO = comunicacaoMapper.paraComunicacaoOutDTO(entity);
         return outDTO;
     }
@@ -49,7 +50,7 @@ public class ComunicacaoService {
             throw new RuntimeException();
         }
         entity.setStatusEnvio(StatusEnvioEnum.CANCELADO);
-        repository.save(entity);
+        repository.saveAndFlush(entity);
         return (comunicacaoMapper.paraComunicacaoOutDTO(entity));
     }
 
@@ -77,4 +78,13 @@ public class ComunicacaoService {
                 .map(emailMapper::paraEmailRequestDTO)
                 .collect(Collectors.toList());
     }
+    public void marcarComoEnviado(String emailDestinatario) {
+        ComunicacaoEntity entity = repository.findByEmailDestinatario(emailDestinatario);
+        if (Objects.isNull(entity)) {
+            throw new RuntimeException();
+        }
+        entity.setStatusEnvio(StatusEnvioEnum.ENVIADO);
+        repository.saveAndFlush(entity);
+    }
+
 }

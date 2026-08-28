@@ -2,6 +2,7 @@ package com.luizalebs.comunicacao_api.business.service;
 
 import com.luizalebs.comunicacao_api.api.dto.EmailRequestDTO;
 import com.luizalebs.comunicacao_api.infraestructure.clients.EmailClient;
+import com.luizalebs.comunicacao_api.infraestructure.exceptions.EmailException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,12 @@ public class EmailService {
     private final ComunicacaoService comunicacaoService;
 
     public void enviaEmail(EmailRequestDTO dto) {
-        emailClient.enviarEmail(dto);
+
+        try {
+            emailClient.enviarEmail(dto);
+        }catch (EmailException e){
+            throw new EmailException("Falha ao enviar email para: " + dto.getEmailDestinatario());
+        }
     }
 
 }
