@@ -16,4 +16,8 @@ public interface ComunicacaoRepository extends CrudRepository<ComunicacaoEntity,
     List<ComunicacaoEntity> findByStatusEnvioAndDataHoraEnvioBetween(StatusEnvioEnum statusEnvio,
                                                                 LocalDateTime dataInicial,
                                                                 LocalDateTime dataFinal);
+
+
+    List<ComunicacaoEntity> findByStatusEnvioAndDataHoraEnvioLessThanEqual(StatusEnvioEnum statusEnvio,
+                                                                           LocalDateTime dataLimite);
 }
