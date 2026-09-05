@@ -1,42 +1,22 @@
-package com.luizalebs.comunicacao_api.api.business;
+package com.luizalebs.comunicacao_api.api.mapper;
 
-import com.luizalebs.comunicacao_api.api.dto.ComunicacaoInDTO;
 import com.luizalebs.comunicacao_api.api.dto.ComunicacaoOutDTO;
 import com.luizalebs.comunicacao_api.business.converter.ComunicacaoMapper;
-import com.luizalebs.comunicacao_api.business.converter.EmailMapper;
-import com.luizalebs.comunicacao_api.business.service.ComunicacaoService;
 import com.luizalebs.comunicacao_api.infraestructure.entities.ComunicacaoEntity;
 import com.luizalebs.comunicacao_api.infraestructure.enums.ModoEnvioEnum;
 import com.luizalebs.comunicacao_api.infraestructure.enums.StatusEnvioEnum;
-import com.luizalebs.comunicacao_api.infraestructure.repositories.ComunicacaoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-public class ComunicacaoServiceTest {
+class ComunicacaoMapperTest {
 
-    @InjectMocks
-    private ComunicacaoService comunicacaoService;
-
-    @Mock
-    private ComunicacaoRepository comunicacaoRepository;
-    @Mock
-    private ComunicacaoMapper comunicacaoMapper;
-    @Mock
-    private EmailMapper emailMapper;
-
-    ComunicacaoInDTO comunicacaoInDTO;
+    ComunicacaoMapper comunicacaoMapper;
 
     ComunicacaoEntity comunicacaoEntity;
 
@@ -56,15 +36,17 @@ public class ComunicacaoServiceTest {
                 .build();
     }
 
-
-
     @Test
-    void deveSalvarComunicacaoComSucesso(){
-        when(comunicacaoRepository.saveAndFlush(comunicacaoEntity)).thenReturn(comunicacaoEntity);
+    void deveConverterParaComunicacaoOutDTO() {
+        ComunicacaoOutDTO dto = comunicacaoMapper.paraComunicacaoOutDTO(comunicacaoEntity);
 
-        comunicacaoService.agendarComunicacao(comunicacaoInDTO);
-
-        assertEquals(????)
-        verify(???)
+        assertNotNull(dto);
+        assertEquals(comunicacaoEntity.getDataHoraEnvio(), dto.getDataHoraEnvio());
+        assertEquals(comunicacaoEntity.getNomeDestinatario(), dto.getNomeDestinatario());
+        assertEquals(comunicacaoEntity.getEmailDestinatario(), dto.getEmailDestinatario());
+        assertEquals(comunicacaoEntity.getTelefoneDestinatario(), dto.getTelefoneDestinatario());
+        assertEquals(comunicacaoEntity.getMensagem(), dto.getMensagem());
+        assertEquals(comunicacaoEntity.getModoDeEnvio(), dto.getModoDeEnvio());
+        assertEquals(comunicacaoEntity.getStatusEnvio(), dto.getStatusEnvio());
     }
 }

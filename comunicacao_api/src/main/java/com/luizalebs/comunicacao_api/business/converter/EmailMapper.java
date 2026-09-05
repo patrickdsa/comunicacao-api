@@ -7,6 +7,7 @@ import org.mapstruct.Mapper;
 @Mapper (componentModel = "spring")
 public interface EmailMapper {
 
+
     ComunicacaoOutDTO paraComunicacaoOutDTO (EmailRequestDTO emailRequestDTO);
 
     EmailRequestDTO paraEmailRequestDTO (ComunicacaoOutDTO comunicacaoOutDTO);
